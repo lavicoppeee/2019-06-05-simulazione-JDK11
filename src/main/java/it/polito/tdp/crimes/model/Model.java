@@ -19,6 +19,7 @@ public class Model {
 	
 	EventsDao dao;
 	List<Integer> vertici;
+	Simulator sim;
 	private Graph<Integer,DefaultWeightedEdge> graph;
 
 	
@@ -85,5 +86,28 @@ public class Model {
 		return vertici;
 	}
 	
+	public List<Integer> getMese(){
+		return dao.getMese();
+	}
 	
+	public List<Integer> getDay(){
+		return dao.getDay();
+	}
+	
+	
+	public void simula(int anno, int mese, int giorno, int n) {
+		
+	    sim = new Simulator();
+		sim.ini(n, anno, mese, giorno, graph);
+		sim.run();
+	}
+	
+	public int nBad() {
+		if(sim==null) {
+			return 0;
+		}
+		else return sim.getnBad();
+	}
 }
+
+

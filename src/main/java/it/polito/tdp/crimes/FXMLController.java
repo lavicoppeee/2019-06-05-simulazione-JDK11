@@ -5,6 +5,8 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -77,7 +79,45 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	Integer anno, mese, giorno, N;
+    	
+    	try {
+    		N = Integer.parseInt(txtN.getText());
+    	} catch (NumberFormatException e) {
+        	this.txtResult.clear();
+    		txtResult.appendText("Formato N non corretto\n");
+    		return;
+    	}
+    	
+    	if(N<1 || N>10) {
+        	this.txtResult.clear();
+    		txtResult.appendText("N deve essere compreso tra 1 e 10\n");
+    		return;
+    	}
+    	
+    	anno = boxAnno.getValue();
+    	mese = boxMese.getValue();
+    	giorno = boxGiorno.getValue();
+    	
+    	if(anno == null || mese == null || giorno == null) {
+        	this.txtResult.clear();
+    		txtResult.appendText("Seleziona tutti i campi!\n");
+    		return;
+    	}
+    	
+    	try {
+    		LocalDate.of(anno, mese, giorno);
+    	} catch (DateTimeException e) {
+        	this.txtResult.clear();
+    		txtResult.appendText("Data non corretta\n");
+    	}
+    	
+    	this.model.simula(anno, mese, giorno, N);
+    	
+    	txtResult.appendText("Simulo con " + N + " agenti");
+    	txtResult.appendText("\nCRIMINI MAL GESTITI: " + this.model.nBad());
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -95,5 +135,9 @@ public class FXMLController {
     public void setModel(Model model) {
     	this.model = model;
     	this.boxAnno.getItems().addAll(model.getAnno());
+    	this.boxMese.getItems().addAll(model.getMese());
+    	this.boxGiorno.getItems().addAll(model.getDay());
+    	
+    	
     }
 }
